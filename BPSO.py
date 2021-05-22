@@ -65,17 +65,22 @@ class BPSO:
             print("Global Best: ", self.gBest)
             print()
 
+    def gBestDimensionPositions(self):
+        nodes = []
+        for i in range(self.dimensions):
+            if self.gBest[i] == 1:
+                nodes.append(i+1)
+        return nodes
 
-graph = {
-    0: [1, 2],
-    1: [0, 2, 3, 4],
-    2: [0, 1],
-    3: [0, 1],
-    4: [0, 1]
-}
+# graph = {
+#     1: [2, 3, 4],
+#     2: [3, 1],
+#     3: [2, 1],
+#     4: [3, 1]
+# }
   
 
-def maxCliqueFitness(array):
+def maxCliqueFitness(array,graph):
     
     nodes = []
     for i in range(len(array)):
@@ -83,17 +88,29 @@ def maxCliqueFitness(array):
             nodes.append(i)
 
     T = 0
-    for n in nodes:
-        # print("n",n)
-        if all(x in graph[n]  for x in nodes if x != n):
-            T += 1
-        else:
-            return 0
+    # print("nodes: ",nodes)
+    # for n in nodes:
+    #     print(graph[n+1])
 
-    return T
+    for n1 in nodes:
+        for n2 in nodes:
+            if n1 != n2:
+                if (n2+1) not in graph[n1+1]: # If other selected nodes are not in the neigbourhood of n1
+                    return 0
+    return len(nodes)
 
-print ("maxCliqueFitness",maxCliqueFitness(np.array([1,1,1,0,0])))
+    # for n in nodes:
+    #     if all(x+1 in graph[n+1]  for x in nodes if x != n):
+    #         T += 1
+    #     else:
+    #         return 0
 
-bpso = BPSO(numOfParticles=30, dimensions=5,
-            fitnessFunc=maxCliqueFitness, maxIter=100)
-bpso.execute()
+    # return T
+
+# print ("maxCliqueFitness",maxCliqueFitness(np.array([1,1,1,0,0])))
+
+# bpso = BPSO(numOfParticles=30, dimensions=5,
+#             fitnessFunc=maxCliqueFitness, maxIter=100)
+# bpso.execute()
+
+# print(bpso.maxCliqueNodes())
