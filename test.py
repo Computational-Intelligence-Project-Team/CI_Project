@@ -56,5 +56,5 @@ graph = {1:[2, 5],
 
 Chrom = [1,1,1,1,1,0]
 
-print(ExpandClique(Chrom,graph))
+print(LimitClique(Chrom,graph))
 
