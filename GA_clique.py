@@ -67,6 +67,23 @@ def fit():
     
     print("Fitness array", fitness)
 
+def fps_parent():
+
+    pass
+
+def finding_children(new_parents): #new parents is the list of indices of the parent
+    children = []
+    for i in range(0, len(new_parents), 2):
+        print(b_population[new_parents[i]], b_population[new_parents[i+1]])
+        child = crossover(b_population[new_parents[i]], b_population[new_parents[i+1]])
+        children.append(child)
+    return children
+    
+def crossover(parent1, parent2):
+    child = np.bitwise_and(parent1, parent2)
+    return child
+
+
 def LimitClique(Chrom,G):
     # Chrom is a vector with binary values
 
@@ -95,5 +112,7 @@ def LimitClique(Chrom,G):
 def main():
     init_pop()
     fit()
+    offspring = finding_children([0, 2])
+    print("Offspring", offspring)
 
 main()
