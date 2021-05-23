@@ -64,7 +64,31 @@ def fitness():
     for i in range(len(sum_fitness)):
         fitness[i] = 1/sum_fitness
 
-    
+
+def LimitClique(Chrom,G):
+    # Chrom is a vector with binary values
+
+    nodes = []
+    for i in range(len(Chrom)):
+        if Chrom[i] == 1:
+            nodes.append(i+1)
+
+    k = nodes.pop(random.randrange(len(nodes)))
+    print(k)
+    CliqueV = [] 
+    CliqueV.append(k)
+
+    for n in nodes:
+        if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
+            CliqueV.append(n)
+                
+    print(CliqueV)
+    # Create New Chromosome of updated clique       
+    NewChrom = [0] * len(Chrom)
+    for v in CliqueV:
+        NewChrom[v-1] = 1
+
+    return NewChrom
 
 def main():
     init_pop()

@@ -22,7 +22,7 @@ import random
 #         print(c//2)
 #     c+=2
 
-def ExpandClique(Chrom,G):
+def LimitClique(Chrom,G):
     # Chrom is a vector with binary values
 
     nodes = []
@@ -31,17 +31,30 @@ def ExpandClique(Chrom,G):
             nodes.append(i+1)
 
     k = nodes.pop(random.randrange(len(nodes)))
+    print(k)
     CliqueV = [] 
     CliqueV.append(k)
 
     for n in nodes:
-        if all( if (n in G[v]) for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
+        if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
             CliqueV.append(n)
                 
-
+    print(CliqueV)
     # Create New Chromosome of updated clique       
     NewChrom = [0] * len(Chrom)
     for v in CliqueV:
         NewChrom[v-1] = 1
-    
+
+    return NewChrom
+
+graph = {1:[2, 5], 
+    2:[1, 3, 4, 6],
+    3:[2, 4, 6], 
+    4:[2, 3, 5, 6], 
+    5:[1, 4, 6], 
+    6:[2, 3, 4, 5]}
+
+Chrom = [1,1,1,1,1,0]
+
+print(ExpandClique(Chrom,graph))
 
