@@ -1,11 +1,12 @@
-
 import random
 import numpy as np
+ 
 
-population_size = 3
+population_size = 10
 fitness = []
 population = []
 b_population = []
+mutation_rate = 0.9
 
 graph = {1:[2, 5], 
         2:[1, 3, 4, 6],
@@ -19,7 +20,7 @@ def init_pop():
     d = dict.fromkeys(graph)
 
     #select vertex for the creation of chromosomes
-    selected_vertex = random.sample(list(d), population_size)
+    selected_vertex = random.sample(list(d), len(d))
     print(selected_vertex)
     for vert in selected_vertex:
         chrom = []
@@ -74,6 +75,7 @@ def fps_parent():
 def finding_children(new_parents): #new parents is the list of indices of the parent
     children = []
     for i in range(0, len(new_parents), 2):
+        print(i)
         print(b_population[new_parents[i]], b_population[new_parents[i+1]])
         child = crossover(b_population[new_parents[i]], b_population[new_parents[i+1]])
         children.append(child)
@@ -83,36 +85,36 @@ def crossover(parent1, parent2):
     child = np.bitwise_and(parent1, parent2)
     return child
 
+def mutation(children_to_mutate, mutation_rate):
+    for c in children_to_mutate:
+        if(random.random() < mutation_rate ):
 
-def LimitClique(Chrom,G):
-    # Chrom is a vector with binary values
+            #the selected vertex to flip
+            vertex = random.randint(0, len(c) - 1 )
+            print("vertex", vertex)
 
-    nodes = []
-    for i in range(len(Chrom)):
-        if Chrom[i] == 1:
-            nodes.append(i+1)
+            #flipping
+            c[vertex]= not c[vertex]
 
-    k = nodes.pop(random.randrange(len(nodes)))
-    print(k)
-    CliqueV = [] 
-    CliqueV.append(k)
+    return children_to_mutate
 
-    for n in nodes:
-        if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
-            CliqueV.append(n)
-                
-    print(CliqueV)
-    # Create New Chromosome of updated clique       
-    NewChrom = [0] * len(Chrom)
-    for v in CliqueV:
-        NewChrom[v-1] = 1
 
-    return NewChrom
+def clique_optimization():
+    pass
+
+def fps_survival():
+    pass
+
 
 def main():
+    #function testing
+
     init_pop()
     fit()
-    offspring = finding_children([0, 2])
+    offspring = finding_children([0, 1, 2, 4, 5, 3])
     print("Offspring", offspring)
+
+    mutated_offspring =  mutation(offspring, mutation_rate)
+    print("Mutated Offspring", mutated_offspring)
 
 main()
