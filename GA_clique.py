@@ -1,5 +1,6 @@
 
 import random
+import numpy as np
 
 population_size = 3
 fitness = []
@@ -54,16 +55,17 @@ def init_pop():
     print("binary clique population = ", b_population)
                     
 
-def fitness():
+def fit():
     sum_fitness = []
-    for i in b_population:
-        sum_fitness[i] = sum(i)
+    for i in range(len(b_population)):
+        sum_fitness.append(sum(b_population[i]))
     
     total = sum(sum_fitness)
 
     for i in range(len(sum_fitness)):
-        fitness[i] = 1/sum_fitness
-
+        fitness.append(sum_fitness[i]/total)
+    
+    print("Fitness array", fitness)
 
 def LimitClique(Chrom,G):
     # Chrom is a vector with binary values
@@ -92,5 +94,6 @@ def LimitClique(Chrom,G):
 
 def main():
     init_pop()
+    fit()
 
 main()
