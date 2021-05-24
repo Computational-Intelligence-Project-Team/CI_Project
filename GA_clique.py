@@ -139,7 +139,7 @@ def mutation(children_to_mutate, mutation_rate):
     return children_to_mutate
 
 
-def LimitClique(Chrom,G):
+def ExpandClique(Chrom,G):
     #Chrom is a vector with binary values
 
     nodes = []
@@ -216,7 +216,7 @@ def main():
         #check if each offspring satisfies the condition of a clique
         #if not a clique, then make it a clique
         for y in range(len(mutated_offspring)):
-            mutated_offspring[y] = LimitClique(mutated_offspring[y], graph)
+            mutated_offspring[y] = ExpandClique(mutated_offspring[y], graph)
 
         print("mutated_final_cliques", mutated_offspring)
 

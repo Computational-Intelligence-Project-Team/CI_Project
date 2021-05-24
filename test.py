@@ -31,7 +31,6 @@ def LimitClique(Chrom,G):
             nodes.append(i+1)
 
     k = nodes.pop(random.randrange(len(nodes)))
-    print(k)
     CliqueV = [] 
     CliqueV.append(k)
 
