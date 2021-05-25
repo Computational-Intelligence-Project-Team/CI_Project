@@ -81,6 +81,46 @@ class BPSO:
                 print("Global Best Fitness: ", self.gBestFitness)
                 print("Global Best: ", self.gBest)
                 print()
+    
+    def benchmark(self):
+        avgFitness = []
+        bestFitness = []
+
+        for i in range(self.maxIter):
+            total = 0
+            for p in range(self.numOfParticles):
+                fitness = self.fitnessFunc(self.particlesPosition[p])
+                # Update Personal Best
+                if fitness > self.pBestFitness[p]:
+                    self.pBestFitness[p] = fitness
+                    self.pBest[p] = self.particlesPosition[p]
+                # Update Global Best
+                if fitness > self.gBestFitness:
+                    self.gBestFitness = fitness
+                    self.gBest = self.particlesPosition[p]
+                total += fitness
+
+                self.updateParticle(p)
+
+            avgFitness.append(total/self.numOfParticles)
+            bestFitness.append(self.gBestFitness)
+
+
+            if self.printParticles:
+                print("Particles Position:")
+                print(self.particlesPosition)
+                print()
+            if self.printGbest:
+                print("Global Best Fitness: ", self.gBestFitness)
+                print("Global Best: ", self.gBest)
+                print()
+            
+        maxCliqueNodes = []
+        for i in range(self.dimensions):
+            if self.gBest[i] == 1:
+                maxCliqueNodes.append(i+1)
+        
+        return (avgFitness,bestFitness,maxCliqueNodes,)
 
     def gBestDimensionPositions(self):
         nodes = []
