@@ -1,60 +1,85 @@
 import random
 import numpy as np
 import pandas as pd
+import networkx as nx
 
-population_size = 5
+population_size = 30
 no_parents = 2
 fitness = []
 population = []
 b_population = []
-mutation_rate = 0.9
+mutation_rate = 1
+crossover_rate = 0.1
+# G = {}
 
-graph = {1:[2, 5], 
-        2:[1, 3, 4, 6],
-        3:[2, 4, 6], 
-        4:[2, 3, 5, 6], 
-        5:[1, 4, 6], 
-        6:[2, 3, 4, 5]}
+# graph = {1:[2, 5], 
+#         2:[1, 3, 4, 6],
+#         3:[2, 4, 6], 
+#         4:[2, 3, 5, 6], 
+#         5:[1, 4, 6], 
+#         6:[2, 3, 4, 5]}
 
-def init_pop():
+def importGs(G, fileName):
 
-    d = dict.fromkeys(graph)
+    with open(fileName, 'r') as f:
+        content = f.read().splitlines()
 
-    #select vertex for the creation of chromosomes
-    selected_vertex = random. sample(range(len(d)), population_size)
-    print(selected_vertex)
-    for vert in selected_vertex:
-        chrom = []
-        b_chrom = [0]*6
-        chrom.append(vert)
-        print("selected vertex = ", vert)
-        b_chrom[vert-1] = 1
+    # Extract Number of Nodes
+    for line in content:
+        if "c number of vertices :" in line:
+            NumOfNodes = int(line.split()[-1])
+            # print(NumOfNodes)
+            break
 
-        for k,v in graph.items():
-            if k == vert:
-                for edge in v:
-                    for i in chrom:
-                        if edge in graph[i]:
-                            present = True
-                        else:
-                            present = False
-                            break
+    # total_vertices = 6
+    indices = list(range(1, NumOfNodes))
+    i = 0
+    while (i < len(content) and content[i][0] != 'e'):
+        i+=1
+    content = content[i:]
+    content = [x.split()[1:] for x in content]
+    
+    relation = [(int(x[0]),int(x[1])) for x in content]
 
-                    if present == True:
-                       chrom.append(edge)
-                       b_chrom[edge-1] = 1
-                    else:
-                       b_chrom[edge-1] = 0
+    #dictionary initialization
+    G = {}
+    
+    #Using networkx to solve 
+    temp = nx.Graph(relation)
+    temp.add_nodes_from(indices)
+    G = nx.to_dict_of_lists(temp)
 
-        population.append(chrom)
-        b_population.append(b_chrom)
-        print("chromosome = ", chrom)
-        print("binary_chromosome = ", b_chrom, "\n")
 
+    # print(G)
+    # print(len(G.keys()))
+    return G
+
+def init_pop(G):
+    # print("len(graph.keys())", len(G.keys()))
+    vertices = random.sample(range(1,len(G.keys())+1), population_size)
+    # print(vertices)
+
+    for vert in vertices:
+        CliqueV = [] 
+        CliqueV.append(vert)
+        # print(graph[vert])
+        random.shuffle(G[vert])
+        # print(random_values)
+        # print(graph[vert])
+        for n in G[vert]:
+            if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
+                CliqueV.append(n)
 
     
-    print("vertex clique representation = ", population)
-    print("binary clique population = ", b_population)
+        # Create New Chromosome of updated clique       
+        NewChrom = [0] * len(G.keys())
+        for v in CliqueV:
+            NewChrom[v-1] = 1
+        b_population.append(NewChrom)
+
+    # print("new", b_population)
+    return G
+        
                     
 
 
@@ -63,14 +88,8 @@ def fit(arr):
     for i in range(len(arr)):
         fitness.append(sum(arr[i]))
 
-    print("fitness" , fitness)
-    # return fitness
-    # total = sum(sum_fitness)
+    # print("fitness" , fitness)
 
-    # for i in range(len(sum_fitness)):
-    #     fitness.append(sum_fitness[i]/total)
-
-    # print("Fitness array", fitness)
 
 def fps_selection(fitness, no_parents, survival=False):
     selected = list()
@@ -78,23 +97,29 @@ def fps_selection(fitness, no_parents, survival=False):
 
     # calculating fitness probability
     sum_fitness = np.sum(fitness)
+    sum_fitness_inv = - np.sum(fitness - sum_fitness)
     if survival:
         selected = set()
         for i in range(len(fitness)):
-            prob.append((sum_fitness-fitness[i])/sum_fitness)
+            prob.append((sum_fitness-fitness[i])/sum_fitness_inv)
     else:
         for i in range(len(fitness)):
             prob.append(fitness[i]/sum_fitness)
-    print("probilities = ", prob)
+
+
     # cumulative sum
     series = pd.Series(prob)
     cums_prob = series.cumsum()
-    print("cumulative probs", cums_prob)
+
 
     # selecting parents/non-survivors
-    while len(selected) < no_parents:
+    if survival == True:
+        count = no_parents//2
+    else:
+        count = no_parents
+
+    while len(selected) < count:
         rand = random.random()
-        # print(cums_prob)
         if rand < cums_prob[0]:
             if survival:
                 selected.add(0)
@@ -112,6 +137,9 @@ def fps_selection(fitness, no_parents, survival=False):
 
 
 
+# def random():
+
+
 
 
 def finding_children(new_parents): #new parents is the list of indices of the parent
@@ -122,7 +150,10 @@ def finding_children(new_parents): #new parents is the list of indices of the pa
     return children
     
 def crossover(parent1, parent2):
-    child = np.bitwise_and(parent1, parent2)
+    if(random.random() < crossover_rate ):
+        child = np.bitwise_and(parent1, parent2)
+    else: 
+        child = parent1           #if crossover doesnt happen then just return a copy of a parent
     return child
 
 def mutation(children_to_mutate, mutation_rate):
@@ -131,15 +162,15 @@ def mutation(children_to_mutate, mutation_rate):
 
             #the selected vertex to flip
             vertex = random.randint(0, len(c) - 1 )
-            print("vertex", vertex)
+            # print("vertex", vertex)
 
             #flipping
-            c[vertex]= not c[vertex]
+            c[vertex]= 1 - c[vertex]
 
     return children_to_mutate
 
 
-def ExpandClique(Chrom,G):
+def ExpandClique(Chrom, G):
     #Chrom is a vector with binary values
 
     nodes = []
@@ -150,25 +181,26 @@ def ExpandClique(Chrom,G):
     if (sum(nodes) != 0):
         k = nodes.pop(random.randrange(len(nodes)))
     else:
-        k = random.randint(1,len(graph.keys()))
+        k = random.randint(1, len(G.keys()))
     
-    print(k)
+    # print(k)
 
     CliqueV = [] 
     CliqueV.append(k)
-
-    for n in graph.keys():
+    # m = G.keys()
+    # random.shuffle(m)
+    for n in G.keys():
         if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
             CliqueV.append(n)
                 
-    print(CliqueV)
+    # print(CliqueV)
 
     # Create New Chromosome of updated clique       
     NewChrom = [0] * len(Chrom)
     for v in CliqueV:
         NewChrom[v-1] = 1
 
-    print("new", NewChrom)
+    # print("new", NewChrom)
     return NewChrom
 
 def trunc():
@@ -178,9 +210,6 @@ def trunc():
     
     return worst
     
-
-
-
 
 def add_to_pop(new_members):
     for i in new_members: 
@@ -197,39 +226,73 @@ def pop_resize(selected):
 def clique_optimization():
     pass
 
-def main():
+def results_ga(generations, graph):
+
+    # G = importGs(G, "graphs\c125.9.txt")
+
+    return main(iterr = generations, Graph = graph)
+
+
+def main(graph, iterr = 100):
     #function testing
-    generations = 10
-    init_pop()
+    G = graph
+    generations = iterr
+
+    init_pop(G)
+    # print("Binary population", b_population)
     fit(b_population)
+
+    max_fitness_array = []
+    avg_fitness_array = []
+    max_nodes = []
+
     for num in range(generations):
 
         parents = fps_selection(fitness, no_parents, False)
-        print("parents", parents)
+        # print("parents", parents)
         
         offspring = finding_children(parents)
-        print("Offspring", offspring)
+        # print("Offspring", offspring)
 
         mutated_offspring =  mutation(offspring, mutation_rate)
-        print("Mutated Offspring", mutated_offspring)
+        # print("Mutated Offspring", mutated_offspring)
 
         #check if each offspring satisfies the condition of a clique
         #if not a clique, then make it a clique
         for y in range(len(mutated_offspring)):
-            mutated_offspring[y] = ExpandClique(mutated_offspring[y], graph)
+            mutated_offspring[y] = ExpandClique(mutated_offspring[y], G)
 
-        print("mutated_final_cliques", mutated_offspring)
+        # print("mutated_final_cliques", mutated_offspring)
 
         add_to_pop(mutated_offspring)
-        print(len(b_population))
+        # print("after add to pop", len(b_population))
+        # to_remove = fps_selection(fitness, no_parents, True)
         to_remove = trunc()
-        print("indices to be removed from pop", to_remove)
+        # print("indices to be removed from pop", to_remove)
 
         pop_resize(to_remove)
 
-        print(len(b_population))
+        # print(len(b_population))
 
-        print("final fitness array", fitness)
+        # print("final fitness array", fitness)
+
+        #for graphs
+        avg_fitness_array.append(sum(fitness)/population_size)
+        max_fitness_array.append(max(fitness))
+
+    #----------------------------------------------------for graph---------------------------------------------#
+    max_clique_idx = fitness.index(max(fitness))
+    max_clique_chrom = b_population[max_clique_idx]
+
+    # print("max_clique_chrom", max_clique_chrom)
+    for i in range(len(max_clique_chrom)):
+        if max_clique_chrom[i] == 1:
+            max_nodes.append(i+1)
+        
+    return (max_fitness_array, avg_fitness_array, max_nodes)
 
 
-main()
+
+G = {}
+G = importGs(G, "graphs\c125.9.txt")
+print(main(G))
