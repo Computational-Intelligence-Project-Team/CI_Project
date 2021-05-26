@@ -282,7 +282,7 @@ def main(iterr, graph):
     #function testing
     G = graph
     generations = iterr
-
+    
     init_pop(G)
     # print("G", G)
 
@@ -342,10 +342,10 @@ def main(iterr, graph):
         if max_clique_chrom[i] == 1:
             max_nodes.append(i+1)
         
-    return (max_fitness_array, avg_fitness_array, max_nodes)
+    return (avg_fitness_array,  max_fitness_array, max_nodes)
 
 
 
-G = {}
-G = importGs(G, "graphs/C125.9.txt")
-print(results_ga(100, G))
+# G = {}
+# G = importGs(G, "graphs/C125.9.txt")
+# print(results_ga(100, G))
