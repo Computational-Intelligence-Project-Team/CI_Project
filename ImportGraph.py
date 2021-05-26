@@ -1,5 +1,6 @@
 import networkx as nx
 
+
 def ImportGraph(fileName):
 
     with open(fileName, 'r') as f:

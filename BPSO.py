@@ -1,3 +1,4 @@
+from ImportGraph import ImportGraph
 from random import random, randint
 import numpy as np
 
@@ -6,7 +7,7 @@ from LocalOptimizationFunctions import ExpandClique
 # Boolean Particle Swarm Optimization
 class BPSO: 
 
-    def __init__(self, numOfParticles, dimensions, fitnessFunc, maxIter, C1 = 0.2, C2 = 0.5, Omega=0.5, particleLocalOptimizationFunc = None, printParticles = False, printGbest = False):
+    def __init__(self, numOfParticles, dimensions, fitnessFunc, maxIter, C1 = 0.6, C2 = 0.2, Omega=0.1, particleLocalOptimizationFunc = None, printParticles = False, printGbest = False):
         self.C1 = C1  # Probablity of c1 (cognitive boolean weightage) being 1
         self.C2 = C2  # Probablity of c2 (social boolean weightage) being 1
         self.Omega = Omega  # Probablity of omega (inertia boolean weightage)  being 1
@@ -101,7 +102,7 @@ class BPSO:
 
                 self.updateParticle(p)
 
-            avgFitness.append(total/self.numOfParticles)
+            avgFitness.append(int(total/self.numOfParticles))
             bestFitness.append(self.gBestFitness)
 
 
@@ -135,8 +136,12 @@ class BPSO:
 #     4: [3, 1]
 # }
   
+graph1fileName = "Graphs/C125.9.txt"
+G = ImportGraph(graph1fileName)
 
-def maxCliqueFitness(array,graph):
+
+
+def maxCliqueFitness(array,graph=G):
     
     nodes = []
     for i in range(len(array)):
@@ -169,10 +174,21 @@ def maxCliqueClosenessFitness(array,graph):
     return len(nodes)
 
 
-# print ("maxCliqueFitness",maxCliqueFitness(np.array([1,1,1,0,0])))
+# from LocalOptimizationFunctions import ExpandExistingClique,LimitClique
+# def ParticleExpandClique(array):
+#     return ExpandExistingClique(LimitClique(array,G),G)
 
-# bpso = BPSO(numOfParticles=30, dimensions=5,
-#             fitnessFunc=maxCliqueFitness, maxIter=100)
-# bpso.execute()
+# def maxFunc(array):
+#     return maxCliqueFitness(array,G)
 
-# print(bpso.maxCliqueNodes())
+# bpso = BPSO(numOfParticles=200, dimensions= G.number_of_nodes(),
+#             fitnessFunc=maxCliqueFitness, maxIter=400, particleLocalOptimizationFunc = ParticleExpandClique)
+
+# avgFitness,bestFitness,maxCliqueNodes = bpso.benchmark()
+# print()
+# print(bpso.gBestDimensionPositions())
+# print('gbest',bpso.gBestFitness)
+# print('maxCliqueNodes',maxCliqueNodes)
+# print('avgFitness',avgFitness)
+# print('bestFitness',bestFitness)
+

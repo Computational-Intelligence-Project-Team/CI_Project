@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
+from ImportGraph import ImportGraph
+
 population_size = 50
 no_parents = 2
 fitness = []
@@ -194,11 +196,11 @@ def pop_resize(selected):
         del b_population[i]
         del fitness[i]
 
-
 # ------------------------- Clique optimization functions ----------------
 def check_Clique(Chrom, G):
     #Chrom is a vector with binary values
 
+    print("Chrom",Chrom)
     nodes = []
     for i in range(len(Chrom)):
         if Chrom[i] == 1:
@@ -217,14 +219,18 @@ def check_Clique(Chrom, G):
 
     
     # print(k)
+    at = []
+    for i in G.keys():
+        at.append(i)
 
-    
+    at.remove(k)
+    random.shuffle(at)
 
     CliqueV = [] 
     CliqueV.append(k)
     # m = G.keys()
     # random.shuffle(m)
-    for n in G.keys():
+    for n in at:
         if all(True if n in G[v] else False for v in CliqueV): # If n is in the neighbourhood of all nodes in the clique
             CliqueV.append(n)
                 
@@ -232,12 +238,12 @@ def check_Clique(Chrom, G):
 
     # Create New Chromosome of updated clique       
     NewChrom = [0] * len(Chrom)
+    print(CliqueV)
     for v in CliqueV:
         NewChrom[v-1] = 1
 
     # print("new", NewChrom)
     return NewChrom
-
 
 def expand_clique(Chrom, G):
 
@@ -359,10 +365,21 @@ def main(iterr, graph):
 
 
 
-G = {}
-G = importGs(G, "graphs/p_hat300_1.txt")
-n , k, m = results_ga(10, G)
-# print(n, k, m)
+# G = {}
+# G = importGs(G, "graphs/p_hat300_1.txt")
+
+# results_GA(10,G)
+# --- t1
+# def results_GA(Iters,Graph):
+#     return main(Iters,nx.to_dict_of_lists(Graph))
+
+# G = ImportGraph("graphs/C125.9.txt")
+# (avg_fitness_array,  max_fitness_array, max_nodes) = results_GA(1000, G)
+# print(avg_fitness_array)
+# print(max_fitness_array)
+# --- t1
+
+#print(n, k, m)
 
 # a = [4, 5, 8, 9, 10, 11, 13, 19, 30, 35, 39, 42, 49, 52, 55, 62, 64, 66, 67, 70, 73, 75, 78, 80, 89, 91, 98, 99, 101, 111, 114, 125]
 # a = [6, 7, 9, 11, 13, 19, 22, 24, 29, 33, 35, 38, 39, 41, 43, 45, 47, 50, 52, 54, 57, 67, 68, 75, 80, 85, 95, 96, 110, 123]
@@ -405,9 +422,9 @@ def checkClique(G, C):
     return True
 
 
-C = m
+# C = m
 # print(checkClique(G, C))
-print(checkClique(G, C))
+# print(checkClique(G, C))
 
 
 # a = n
