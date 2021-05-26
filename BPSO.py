@@ -9,8 +9,7 @@ class BPSO:
     def __init__(self, numOfParticles, dimensions, fitnessFunc, maxIter, C1 = 0.2, C2 = 0.5, Omega=0.5, particleLocalOptimizationFunc = None, printParticles = False, printGbest = False):
         self.C1 = C1  # Probablity of c1 (cognitive boolean weightage) being 1
         self.C2 = C2  # Probablity of c2 (social boolean weightage) being 1
-        # Probablity of omega (inertia boolean weightage)  being 1
-        self.Omega = Omega
+        self.Omega = Omega  # Probablity of omega (inertia boolean weightage)  being 1
         self.particlesPosition = self.initializeRandomly(
             numOfParticles, dimensions)
         self.particlesVelocity = self.initializeRandomly(
@@ -169,13 +168,6 @@ def maxCliqueClosenessFitness(array,graph):
         
     return len(nodes)
 
-    # for n in nodes:
-    #     if all(x+1 in graph[n+1]  for x in nodes if x != n):
-    #         T += 1
-    #     else:
-    #         return 0
-
-    # return T
 
 # print ("maxCliqueFitness",maxCliqueFitness(np.array([1,1,1,0,0])))
 

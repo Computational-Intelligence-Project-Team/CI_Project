@@ -36,6 +36,8 @@ def results_bpso(Iters,Graph):
             printParticles = False, printGbest = False)
     return bpso.benchmark()
 
+
+
 def compare_metaheuristics(graph,n_iters=15):
     print("Starting Comparision...")
     iters = [i for i in range(n_iters)]
@@ -44,10 +46,10 @@ def compare_metaheuristics(graph,n_iters=15):
     avgFitness_GA, bestFitness_GA, maxCliqueNodes_GA = results_GA(n_iters,graph)
     avgFitness_ACO, bestFitness_ACO, maxCliqueNodes_ACO = results_aco(n_iters,graph)
 
-    y_names = ['BPSO', "BPSO with Local Optimization","GA","ACO"]
+    y_names = ['BPSO', "BPSO with Local Optimization","ACO"]
     
     avgFitness = {"Iterations" : iters, "BPSO": avgFitness_bpso, "BPSO with Local Optimization": avgFitness_bpso_LO 
-        , "GA" : avgFitness_GA, "ACO" : avgFitness_ACO
+        , "ACO" : avgFitness_ACO #, "GA" : avgFitness_GA
     } 
     frame = pd.DataFrame(avgFitness)
     frame.plot(x ='Iterations', y = y_names, style='o')
@@ -57,7 +59,7 @@ def compare_metaheuristics(graph,n_iters=15):
     print(frame)
 
     bestFitness = {"Iterations" : iters, "BPSO": bestFitness_bpso, "BPSO with Local Optimization": bestFitness_bpso_LO  
-        , "GA" : bestFitness_GA, "ACO" : bestFitness_ACO
+       , "ACO" : bestFitness_ACO # , "GA" : bestFitness_GA
         } 
     frame = pd.DataFrame(bestFitness)
     frame.plot(x ='Iterations', y = y_names, style='o')
@@ -67,8 +69,5 @@ def compare_metaheuristics(graph,n_iters=15):
     print(frame)
 
 
-compare_metaheuristics(G,400)
+compare_metaheuristics(G,800)
 
-# bpso = BPSO(numOfParticles=5, dimensions=G.number_of_nodes(),
-#             fitnessFunc=maxFunc, maxIter=30, particleLocalOptimizationFunc = ParticleExpandClique,
-#             printParticles = True, printGbest = True)
