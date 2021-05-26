@@ -271,14 +271,14 @@ def expand_clique(Chrom, G):
 
 
 #--------------------------------------- main ------------------------
-def results_ga(generations, graph):
+def results_ga(generations, gr):
 
     # G = importGs(G, "graphs\c125.9.txt")
 
-    return main(iterr = generations, Graph = graph)
+    return main(generations, gr)
 
 
-def main(graph, iterr = 1000):
+def main(iterr, graph):
     #function testing
     G = graph
     generations = iterr
@@ -348,4 +348,4 @@ def main(graph, iterr = 1000):
 
 G = {}
 G = importGs(G, "graphs/C125.9.txt")
-main(G)
+print(results_ga(100, G))
