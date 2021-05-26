@@ -7,8 +7,8 @@ def ImportGraph(fileName):
 
     # Extract Number of Nodes
     for line in content:
-        if "c number of vertices :" in line:
-            NumOfNodes = int(line.split()[-1])
+        if line[0] == "p":
+            NumOfNodes = int(line.split()[2])
             break
 
     # Extract Edges
