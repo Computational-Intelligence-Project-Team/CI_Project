@@ -289,10 +289,10 @@ def main(graph, iterr = 100):
         if max_clique_chrom[i] == 1:
             max_nodes.append(i+1)
         
-    return (max_fitness_array, avg_fitness_array, max_nodes)
+    return (avg_fitness_array, max_fitness_array, max_nodes)
 
 
 
-G = {}
-G = importGs(G, "graphs\c125.9.txt")
-print(main(G))
+# G = {}
+# G = importGs(G, "graphs\c125.9.txt")
+# print(main(G))

@@ -14,6 +14,17 @@ def visualizeClique(graph,cliqueNodes):
     nx.draw_spring(graph, with_labels = True, node_color = node_colors)
     plt.show()
 
+def visualizeCliqueSave(graph,cliqueNodes,fileName):
+    node_colors = []
+    for i in range(1,graph.number_of_nodes()+1):
+        if i in cliqueNodes:
+            node_colors.append("red")
+        else:
+            node_colors.append("blue")
+    
+    nx.draw_spring(graph, with_labels = True, node_color = node_colors)
+    plt.savefig(fileName)
+
 # graph = {
 #     0: [1, 2],
 #     1: [0, 2, 3, 4],
