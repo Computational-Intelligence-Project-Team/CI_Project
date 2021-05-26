@@ -3,13 +3,14 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-population_size = 20
+population_size = 50
 no_parents = 2
 fitness = []
 population = []
 b_population = []
-mutation_rate = 1
-crossover_rate = 0.1
+mutation_rate = 0.9
+crossover_rate = 0.9
+# NumOfNodes = 0
 # G = {}
 
 # graph = {1:[2, 5], 
@@ -25,6 +26,7 @@ def importGs(G, fileName):
         content = f.read().splitlines()
 
     # Extract Number of Nodes
+    NumOfNodes = 0
     for line in content:
         if "c number of vertices :" in line:
             NumOfNodes = int(line.split()[-1])
@@ -206,8 +208,17 @@ def check_Clique(Chrom, G):
         k = nodes.pop(random.randrange(len(nodes)))
     else:
         k = random.randint(1, len(G.keys()))
+
+    # randnums= np.random.randint(1,len(G.keys()) +1,len(G.keys()))
+    # random.shuffle(randnums)
+    
+    # print(G.keys())
+    # print(randnums)
+
     
     # print(k)
+
+    
 
     CliqueV = [] 
     CliqueV.append(k)
@@ -282,7 +293,7 @@ def main(iterr, graph):
     #function testing
     G = graph
     generations = iterr
-    
+
     init_pop(G)
     # print("G", G)
 
@@ -295,7 +306,7 @@ def main(iterr, graph):
     max_nodes = []
 
     for num in range(generations):
-
+        # print(num)
         parents = fps_selection(no_parents, False)
         # print("parents", parents)
         
@@ -319,8 +330,8 @@ def main(iterr, graph):
 
         add_to_pop(mutated_offspring)
         # print("after add to pop", len(b_population))
-        # to_remove = fps_selection(no_parents, True)
-        to_remove = trunc()
+        to_remove = fps_selection(no_parents, True)
+        # to_remove = trunc()
         # print("indices to be removed from pop", to_remove)
 
         pop_resize(to_remove)
@@ -342,10 +353,65 @@ def main(iterr, graph):
         if max_clique_chrom[i] == 1:
             max_nodes.append(i+1)
         
+    # return (max(max_fitness_array),max(avg_fitness_array), max_nodes)
     return (avg_fitness_array,  max_fitness_array, max_nodes)
 
 
 
-# G = {}
-# G = importGs(G, "graphs/C125.9.txt")
-# print(results_ga(100, G))
+
+G = {}
+G = importGs(G, "graphs/p_hat300_1.txt")
+n , k, m = results_ga(10, G)
+# print(n, k, m)
+
+# a = [4, 5, 8, 9, 10, 11, 13, 19, 30, 35, 39, 42, 49, 52, 55, 62, 64, 66, 67, 70, 73, 75, 78, 80, 89, 91, 98, 99, 101, 111, 114, 125]
+# a = [6, 7, 9, 11, 13, 19, 22, 24, 29, 33, 35, 38, 39, 41, 43, 45, 47, 50, 52, 54, 57, 67, 68, 75, 80, 85, 95, 96, 110, 123]
+# a = [1, 5, 8, 9, 11, 14, 19, 25, 29, 31, 34, 45, 49, 52, 55, 65, 66, 68, 70, 77, 79, 80, 82, 85, 91, 98, 99, 101, 103, 114, 117, 122, 125]
+# a = [3, 4, 7, 15, 18, 20, 23, 26, 28, 32, 33, 44, 45, 54, 55, 61, 62, 67, 73, 84, 92, 99, 101, 105, 110, 111, 114, 118, 121, 123, 125]
+# a = [1, 3, 5, 6, 7, 18, 24, 25, 26, 29, 32, 40, 43, 45, 48, 49, 50, 51, 54, 55, 60, 61, 68, 75, 77, 96, 99, 103, 110, 122, 123, 124]
+# for i in range(len(a)-1):
+#     for x in range(len(a)-1):
+#         if a[x+1] in G[a[i]]:
+#             h = True
+#         elif a[x+1] == a[i]:
+#             h = True
+#         else:
+#             h = False
+#             print(a[i], a[x+1])
+#             print(i, x, h)
+#             break
+#     print(h)
+# print(h)
+# print(G[32])
+
+# # print(G[114])
+# # print(h)
+
+# print(n, k, m)
+
+# from ImportGraph import ImportGraph
+
+# G = ImportG("graphs/c125.9.txt")
+
+
+
+
+def checkClique(G, C):
+    for v in C:
+        for j in C:
+            if v != j:
+                if v not in G[j]:
+                    return False
+    return True
+
+
+C = m
+# print(checkClique(G, C))
+print(checkClique(G, C))
+
+
+# a = n
+# b = 
+# def error(a,b):
+#     r = (1 - a/b)*100
+#     return r
