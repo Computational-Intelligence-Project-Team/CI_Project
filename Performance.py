@@ -1,4 +1,5 @@
 import networkx
+import csv   
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,8 +14,7 @@ from Visualize_Graph import *
 from LocalOptimizationFunctions import ExpandExistingClique,LimitClique
 
 
-graph1fileName = "Graphs/C125.9.txt"
-G = ImportGraph(graph1fileName)
+
 
 
 def results_GA(Iters,Graph):
@@ -48,9 +48,13 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
 
     iters = [i for i in range(n_iters)]
     avgFitness_bpso, bestFitness_bpso, maxCliqueNodes_bpso = results_bpso(n_iters,graph)
+    print("bpso Complete")
     avgFitness_bpso_LO, bestFitness_bpso_LO, maxCliqueNodes_bpso_LO = results_bpso(n_iters,graph)
+    print("bpso_LO Complete")
     avgFitness_GA, bestFitness_GA, maxCliqueNodes_GA = results_GA(n_iters,graph)
+    print("GA Complete")
     avgFitness_ACO, bestFitness_ACO, maxCliqueNodes_ACO = results_aco(n_iters,graph)
+    print("ACO Complete")
 
     y_names = ['BPSO', "BPSO with Local Optimization","ACO", "GA"]
     plot_style = '*'
@@ -59,8 +63,9 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
         , "ACO" : avgFitness_ACO , "GA" : avgFitness_GA
     } 
     frame = pd.DataFrame(avgFitness)
-    frame.plot(x ='Iterations', y = y_names, style=plot_style)
+    frame.plot(x ='Iterations', y = y_names)
     plt.title('Average Fitness against Number of Iterations')
+    plt.ylabel("Fitness (Nodes in Clique)")
     plt.savefig('Plots/plot-average-fitness-' + graphName + '.png')
     plt.show()
     print(frame)
@@ -69,47 +74,62 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
        , "ACO" : bestFitness_ACO  , "GA" : bestFitness_GA
         } 
     frame = pd.DataFrame(bestFitness)
-    frame.plot(x ='Iterations', y = y_names, style=plot_style)
-    plt.title('Best Fitness (CLique Size) against Number of Iterations')
+    frame.plot(x ='Iterations', y = y_names)
+    plt.title('Best Fitness (Clique Size) against Number of Iterations')
+    plt.ylabel("Fitness (Maximum Clique Nodes)")
     plt.savefig('Plots/plot-best-fitness-'+ graphName +'.png')
     plt.show()
     print(frame)
 
 def compare_metaheuristics_graphs(n_iters=15):
+    
     print("Starting Comparision...")
 
     graphFileNames = os.listdir("Graphs/") 
+    print(graphFileNames)
+     
+    fields=['Graph Name','BPSO','ACO']
+    with open('output.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(fields)
+    
     allGraphNames = []
-    bestFitness_bpso = []
     bestFitness_bpso_LO = []
-    bestFitness_GA = [] 
+    # bestFitness_GA = [] 
     bestFitness_ACO = []
     iters = [i for i in range(n_iters)]
-
     for fileName in graphFileNames:
         graph = ImportGraph("Graphs/"+fileName)
         
-        graphName = fileName[:-5]
+        graphName = fileName[:-4]
         if graphName[-4:] == ".col":
-            graphName = graphName[:-5]
+            graphName = graphName[:-4]
         
         print(graphName)
         allGraphNames.append(graphName)
 
-        bestFitness_bpso.append(max(results_bpso(n_iters,graph)[1]))
         bestFitness_bpso_LO.append(max(results_bpso_locally_optimized(n_iters,graph)[1]))
-        bestFitness_GA.append(max(results_GA(n_iters,graph)[1]))
-        bestFitness_ACO.append(max(results_aco(n_iters,graph)[1]))    
+        # bestFitness_GA.append(max(results_GA(n_iters,graph)[1]))
+        bestFitness_ACO.append(max(results_aco(n_iters,graph)[1])) 
+
+        fields=[graphName,str(bestFitness_bpso_LO[-1]),bestFitness_ACO[-1]]
+        with open('output.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(fields)
 
 
-    bestFitness = {"Graph Name" : iters, "BPSO": bestFitness_bpso, "BPSO with Local Optimization": bestFitness_bpso_LO  
-    , "ACO" : bestFitness_ACO  , "GA" : bestFitness_GA
+    bestFitness = {"Graph Name" : allGraphNames, "BPSO": bestFitness_bpso_LO  
+    , "ACO" : bestFitness_ACO  ,# "GA" : bestFitness_GA
         } 
     frame = pd.DataFrame(bestFitness)
+    frame.to_csv("Fitness_Comparision_Table.csv")
     print(frame)
 
+graph1fileName = "Graphs/C125.9.txt"
+graph2fileName = "Graphs/MANN_a27.txt"
+G = ImportGraph(graph1fileName)
 
-# compare_metaheuristics(G,400)
+# compare_metaheuristics(G,1000)
 
-compare_metaheuristics_graphs(3)
+compare_metaheuristics_graphs(800)
 

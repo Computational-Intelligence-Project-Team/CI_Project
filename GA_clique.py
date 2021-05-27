@@ -200,7 +200,9 @@ def pop_resize(selected):
 def check_Clique(Chrom, G):
     #Chrom is a vector with binary values
 
-    print("Chrom",Chrom)
+    # print("Chrom",Chrom)
+    # print(len(Chrom),len(G.keys()))
+    # print("G_keys",G.keys())
     nodes = []
     for i in range(len(Chrom)):
         if Chrom[i] == 1:
@@ -238,7 +240,6 @@ def check_Clique(Chrom, G):
 
     # Create New Chromosome of updated clique       
     NewChrom = [0] * len(Chrom)
-    print(CliqueV)
     for v in CliqueV:
         NewChrom[v-1] = 1
 

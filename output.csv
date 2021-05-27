@@ -1,0 +1,23 @@
+Graph Name,BPSO,ACO
+brock200_,10,12
+brock200_,14,13
+brock400_,21,19
+brock800_,18,16
+C125.,31,30
+c250.,37,34
+C500.,45,42
+DSJC1000.,13,13
+DSJC500.,11,10
+gen200_p0.9_4,34,33
+gen200_p0.9_5,43,33
+gen400_p0.9_5,42,39
+gen400_p0.9_6,43,41
+keller,11,10
+MANN_a2,125,122
+p_hat300_,7,7
+p_hat700-,8,9
+r125.1.co,5,5
+Graph Name,BPSO,ACO
+brock200_2,10,10
+brock200_4,16,14
+brock400_2,25,23
