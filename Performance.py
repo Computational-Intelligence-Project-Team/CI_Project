@@ -59,6 +59,7 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
     y_names = ['BPSO', "BPSO with Local Optimization","ACO", "GA"]
     plot_style = '*'
     
+    # Plot Average Fitness comparision graphs
     avgFitness = {"Iterations" : iters, "BPSO": avgFitness_bpso, "BPSO with Local Optimization": avgFitness_bpso_LO 
         , "ACO" : avgFitness_ACO , "GA" : avgFitness_GA
     } 
@@ -70,6 +71,7 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
     plt.show()
     print(frame)
 
+    # Plot Best Fitness comparision graphs
     bestFitness = {"Iterations" : iters, "BPSO": bestFitness_bpso, "BPSO with Local Optimization": bestFitness_bpso_LO  
        , "ACO" : bestFitness_ACO  , "GA" : bestFitness_GA
         } 
@@ -80,6 +82,9 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
     plt.savefig('Plots/plot-best-fitness-'+ graphName +'.png')
     plt.show()
     print(frame)
+
+    visualizeClique(graph,maxCliqueNodes_bpso)
+    visualizeClique(graph,maxCliqueNodes_bpso_LO)
 
 def compare_metaheuristics_graphs(n_iters=15):
     
@@ -131,5 +136,5 @@ G = ImportGraph(graph1fileName)
 
 # compare_metaheuristics(G,1000)
 
-compare_metaheuristics_graphs(800)
+# compare_metaheuristics_graphs(800)
 

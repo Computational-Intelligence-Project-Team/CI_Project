@@ -4,7 +4,8 @@ from ImportGraph import *
 from Visualize_Graph import *
 from LocalOptimizationFunctions import ExpandExistingClique,LimitClique
 
-graph1fileName = "Graphs/C125.9.txt"
+graph1fileName = "Graphs/r125.1.col.txt"
+graph2fileName = "Graphs/keller4.txt"
 G = ImportGraph(graph1fileName)
 
 print("G",G[5])
@@ -23,7 +24,7 @@ bpso = BPSO(numOfParticles=50, dimensions=G.number_of_nodes(),
             fitnessFunc=maxFunc, maxIter=100, particleLocalOptimizationFunc = ParticleExpandClique,
             printParticles = False, printGbest = True)
 
-bpso.execute()
+bpso.benchmark()
 maxCliqueNodes = bpso.gBestDimensionPositions()
 print("maxCliqueNodes: ",maxCliqueNodes)
-visualizeClique(G,maxCliqueNodes)
+visualizeClique(G,maxCliqueNodes,"BPSO Max Clique")

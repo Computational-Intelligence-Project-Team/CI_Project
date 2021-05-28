@@ -57,3 +57,14 @@ Chrom = [1,1,1,1,1,0]
 
 print(LimitClique(Chrom,graph))
 
+
+import matplotlib.pyplot as plt
+
+plt.plot(range(10))
+
+plt.figure()
+plt.plot(range(10), 'ro-')
+
+plt.figure()
+
+plt.show() # only do this once, at the end
