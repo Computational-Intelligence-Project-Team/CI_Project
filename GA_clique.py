@@ -367,12 +367,12 @@ G = importGs(G, "graphs/C125.9.txt")
 
 
 
-n , k, m= results_ga(10000, G)
+# n , k, m= results_ga(10000, G)
 
 
 
  
-print(n, k, m)
+# print(n, k, m)
 
 
 # print(n, k, m)
@@ -388,9 +388,9 @@ def checkClique(G, C):
     return True
 
 
-C = m
+# C = m
 # # print(checkClique(G, C))
-print(checkClique(G, C))
+# print(checkClique(G, C))
 
 
 # a = n

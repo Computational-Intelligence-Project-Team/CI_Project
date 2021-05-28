@@ -8,7 +8,6 @@ graph1fileName = "Graphs/r125.1.col.txt"
 graph2fileName = "Graphs/keller4.txt"
 G = ImportGraph(graph1fileName)
 
-print("G",G[5])
 
 def maxFunc(array):
     return maxCliqueFitness(array,G)

@@ -59,12 +59,12 @@ print(LimitClique(Chrom,graph))
 
 
 import matplotlib.pyplot as plt
+import numpy as np
 
-plt.plot(range(10))
+# Some example data to display
+x = np.linspace(0, 2 * np.pi, 400)
+y = np.sin(x ** 2)
 
-plt.figure()
-plt.plot(range(10), 'ro-')
+fig, (ax1, ax2) = plt.subplots(1, 2, subplot_kw=dict(projection='polar'))
 
-plt.figure()
-
-plt.show() # only do this once, at the end
+plt.show()

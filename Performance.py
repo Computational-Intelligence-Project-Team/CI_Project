@@ -71,6 +71,8 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
     plt.show()
     print(frame)
 
+    visualizeClique()
+
     # Plot Best Fitness comparision graphs
     bestFitness = {"Iterations" : iters, "BPSO": bestFitness_bpso, "BPSO with Local Optimization": bestFitness_bpso_LO  
        , "ACO" : bestFitness_ACO  , "GA" : bestFitness_GA
@@ -83,8 +85,6 @@ def compare_metaheuristics(graph,n_iters=15,graphName = "C125.9"):
     plt.show()
     print(frame)
 
-    visualizeClique(graph,maxCliqueNodes_bpso)
-    visualizeClique(graph,maxCliqueNodes_bpso_LO)
 
 def compare_metaheuristics_graphs(n_iters=15):
     
@@ -132,9 +132,11 @@ def compare_metaheuristics_graphs(n_iters=15):
 
 graph1fileName = "Graphs/C125.9.txt"
 graph2fileName = "Graphs/MANN_a27.txt"
-G = ImportGraph(graph1fileName)
+graph3fileName = "Graphs/r125.1.col.txt"
+graph4fileName = "Graphs/keller4.txt"
+G = ImportGraph(graph3fileName)
 
-# compare_metaheuristics(G,1000)
+compare_metaheuristics(G,500,"r125.1")
 
 # compare_metaheuristics_graphs(800)
 
