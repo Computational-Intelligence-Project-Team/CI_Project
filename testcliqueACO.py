@@ -1,5 +1,4 @@
 from cliqueAco import *
-from BPSO import *
 from ImportGraph import *
 from Visualize_Graph import *
 

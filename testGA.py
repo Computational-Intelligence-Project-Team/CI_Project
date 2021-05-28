@@ -1,5 +1,4 @@
 from GA_clique import results_ga
-from BPSO import *
 from ImportGraph import *
 from Visualize_Graph import *
 
